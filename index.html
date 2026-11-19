@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Picture Words</title>
+<meta name="theme-color" content="#6b2d8f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Picture Words">
+<link rel="icon" id="fav" href="data:,"><link rel="apple-touch-icon" id="ati" href="">
 <style>
 :root{--bg:#fbf8f1;--card:#fff;--ink:#23202b;--mute:#6b6577;--line:#e3dccd;--accent:#6b2d8f;--accent2:#e8731f;--ok:#2e8b57;--bad:#c0392b;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -44,67 +48,77 @@ h2 small{color:var(--mute);font-weight:400;font-size:13px;margin-left:6px}
 <body>
 <header>
   <h1>Picture Words</h1>
-    <p class="sub">Every labelled word from pages 29–32. Tap a word to hear it.</p>
-      <div class="bar">
-          <input id="q" type="search" placeholder="Search a word…" aria-label="Search words">
-              <button class="btn alt" id="modeBtn">Quiz me</button>
-                </div>
-                </header>
-                <div class="chips" id="chips" role="group" aria-label="Filter by scene"></div>
-                <main>
-                  <div class="count" id="count"></div>
-                    <div id="list"></div>
-                      <div id="quiz" class="hide"></div>
-                      </main>
-                      <script>
-                      var DATA=[
-                      {s:"Accessories",p:29,w:[["Hat","👒"],["Goggles","🕶️"],["Belt","🪢"],["Handkerchief","🤧"],["Gloves","🧤"],["Watch","⌚"],["Shoes","👟"],["Socks","🧦"]]},
-                      {s:"Restaurant",p:30,w:[["Chair","🪑"],["Cup","☕"],["Table","🍽️"],["Flower vase","💐"],["Waiter","🤵"]]},
-                      {s:"Florist Shop",p:30,w:[["Bouquet","💐"],["Florist","🧑‍🌾"],["Customers","🧑‍🤝‍🧑"]]},
-                      {s:"School",p:30,w:[["Flag","🇮🇳"],["Building","🏫"],["Slide","🛝"],["Playground","🛝"],["Student","🧒"],["School bus","🚌"]]},
-                      {s:"Classroom",p:30,w:[["Clock","🕒"],["Chart","📊"],["Globe","🌍"],["Duster","🧽"],["Chalk","✏️"],["Blackboard","⬛"],["Whiteboard","⬜"],["Bookshelf","📚"],["Chair","🪑"],["Teacher","👩‍🏫"],["Table","🪵"],["Desk","🪑"],["Student","🧒"]]},
-                      {s:"Playground",p:31,w:[["Monkey bars","🧗"],["Slide","🛝"],["Seesaw","⚖️"],["Swing","🎠"],["Merry-go-round","🎡"],["Skipping rope","🪢"]]},
-                      {s:"Fire Station",p:31,w:[["Siren","🚨"],["Ladder","🪜"],["Fire engine","🚒"],["Fire extinguisher","🧯"],["Firefighter","🧑‍🚒"]]},
-                      {s:"Post Office",p:31,w:[["Noticeboard","📌"],["Clerk","🧑‍💼"],["Letter box","📮"],["Postman","📬"],["Parcel","📦"]]},
-                      {s:"Airport",p:31,w:[["Aeroplane","✈️"],["Air hostess","👩‍✈️"],["Luggage","🧳"],["Luggage trolley","🛄"]]},
-                      {s:"Police Station",p:32,w:[["Policeman","👮"],["Police jeep","🚓"]]},
-                      {s:"Hospital",p:32,w:[["Doctor","🧑‍⚕️"],["Stethoscope","🩺"],["Chart","📋"],["Patient","🛏️"],["Medicines","💊"]]},
-                      {s:"Railway Station",p:32,w:[["Luggage","🧳"],["Train","🚆"],["Porter","🧑‍🔧"],["Passenger","🧍"]]},
-                      {s:"Departmental Store",p:32,w:[["Cashier","💁"],["Customers","🛍️"],["Trolley","🛒"]]},
-                      {s:"Bus Stop",p:32,w:[["Bus stand","🚏"],["Driver","🧑‍✈️"],["Passenger","🧍"],["Bus","🚌"]]},
-                      {s:"Bank",p:32,w:[["Clerk","🧑‍💼"],["Counter","🏦"],["Customer","🧍"]]}
-                      ];
-                      var sel="All",quizMode=false,$=function(i){return document.getElementById(i)};
-                      function speak(t){try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang="en-IN";speechSynthesis.speak(u)}catch(e){}}
-                      function chips(){var c=$("chips"),names=["All"].concat(DATA.map(function(d){return d.s}));
-                      c.innerHTML="";names.forEach(function(n){var b=document.createElement("button");b.className="chip";b.textContent=n;
-                      b.setAttribute("aria-pressed",n===sel);b.onclick=function(){sel=n;chips();render()};c.appendChild(b)})}
-                      function render(){
-                      var q=$("q").value.trim().toLowerCase(),list=$("list"),total=0,uniq={};list.innerHTML="";
-                      DATA.forEach(function(d){if(sel!=="All"&&sel!==d.s)return;
-                      var ws=d.w.filter(function(x){return !q||x[0].toLowerCase().indexOf(q)>-1});if(!ws.length)return;
-                      var h=document.createElement("h2");h.innerHTML=d.s+"<small>page "+d.p+"</small>";list.appendChild(h);
-                      var g=document.createElement("div");g.className="grid";
-                      ws.forEach(function(x){total++;uniq[x[0].toLowerCase()]=1;var b=document.createElement("button");b.className="w";
-                      b.innerHTML='<span class="e">'+x[1]+'</span><span class="t">'+x[0]+'</span>';b.onclick=function(){speak(x[0])};g.appendChild(b)});
-                      list.appendChild(g)});
-                      $("count").textContent=total+" labels shown · "+Object.keys(uniq).length+" different words";
-                      if(!total)list.innerHTML="<p>No word found. Try another spelling.</p>"}
-                      function newQ(){
-                      var pool=[];DATA.forEach(function(d){if(sel==="All"||sel===d.s)d.w.forEach(function(x){pool.push(x)})});
-                      var all=[];DATA.forEach(function(d){d.w.forEach(function(x){if(all.indexOf(x[0])<0)all.push(x[0])})});
-                      if(pool.length<1)return;var a=pool[Math.floor(Math.random()*pool.length)],o=[a[0]];
-                      while(o.length<4){var r=all[Math.floor(Math.random()*all.length)];if(o.indexOf(r)<0&&r!==a[0]&&r.toLowerCase()!==a[0].toLowerCase())o.push(r)}
-                      o.sort(function(){return Math.random()-.5});
-                      var z=$("quiz");z.innerHTML='<div class="quiz"><div class="big">'+a[1]+'</div><p>What is this called?</p><div class="opts" id="opts"></div><button class="btn" id="nx">Next</button></div>';
-                      o.forEach(function(t){var b=document.createElement("button");b.className="opt";b.textContent=t;
-                      b.onclick=function(){var ok=t.toLowerCase()===a[0].toLowerCase();b.classList.add(ok?"ok":"bad");if(ok)speak(a[0]);
-                      else Array.prototype.forEach.call($("opts").children,function(e){if(e.textContent.toLowerCase()===a[0].toLowerCase())e.classList.add("ok")})};$("opts").appendChild(b)});
-                      $("nx").onclick=newQ}
-                      $("modeBtn").onclick=function(){quizMode=!quizMode;this.textContent=quizMode?"Show words":"Quiz me";
-                      $("list").classList.toggle("hide",quizMode);$("count").classList.toggle("hide",quizMode);$("quiz").classList.toggle("hide",!quizMode);if(quizMode)newQ()};
-                      $("q").oninput=render;chips();render();
-                      </script>
-                      </body>
-                      </html>
-                      
+  <p class="sub">Every labelled word from pages 29–32. Tap a word to hear it.</p>
+  <div class="bar">
+    <input id="q" type="search" placeholder="Search a word…" aria-label="Search words">
+    <button class="btn alt" id="modeBtn">Quiz me</button>
+  </div>
+</header>
+<div class="chips" id="chips" role="group" aria-label="Filter by scene"></div>
+<main>
+  <div class="count" id="count"></div>
+  <div id="list"></div>
+  <div id="quiz" class="hide"></div>
+</main>
+<script>
+var DATA=[
+{s:"Accessories",p:29,w:[["Hat","👒"],["Goggles","🕶️"],["Belt","🪢"],["Handkerchief","🤧"],["Gloves","🧤"],["Watch","⌚"],["Shoes","👟"],["Socks","🧦"]]},
+{s:"Restaurant",p:30,w:[["Chair","🪑"],["Cup","☕"],["Table","🍽️"],["Flower vase","💐"],["Waiter","🤵"]]},
+{s:"Florist Shop",p:30,w:[["Bouquet","💐"],["Florist","🧑‍🌾"],["Customers","🧑‍🤝‍🧑"]]},
+{s:"School",p:30,w:[["Flag","🇮🇳"],["Building","🏫"],["Slide","🛝"],["Playground","🛝"],["Student","🧒"],["School bus","🚌"]]},
+{s:"Classroom",p:30,w:[["Clock","🕒"],["Chart","📊"],["Globe","🌍"],["Duster","🧽"],["Chalk","✏️"],["Blackboard","⬛"],["Whiteboard","⬜"],["Bookshelf","📚"],["Chair","🪑"],["Teacher","👩‍🏫"],["Table","🪵"],["Desk","🪑"],["Student","🧒"]]},
+{s:"Playground",p:31,w:[["Monkey bars","🧗"],["Slide","🛝"],["Seesaw","⚖️"],["Swing","🎠"],["Merry-go-round","🎡"],["Skipping rope","🪢"]]},
+{s:"Fire Station",p:31,w:[["Siren","🚨"],["Ladder","🪜"],["Fire engine","🚒"],["Fire extinguisher","🧯"],["Firefighter","🧑‍🚒"]]},
+{s:"Post Office",p:31,w:[["Noticeboard","📌"],["Clerk","🧑‍💼"],["Letter box","📮"],["Postman","📬"],["Parcel","📦"]]},
+{s:"Airport",p:31,w:[["Aeroplane","✈️"],["Air hostess","👩‍✈️"],["Luggage","🧳"],["Luggage trolley","🛄"]]},
+{s:"Police Station",p:32,w:[["Policeman","👮"],["Police jeep","🚓"]]},
+{s:"Hospital",p:32,w:[["Doctor","🧑‍⚕️"],["Stethoscope","🩺"],["Chart","📋"],["Patient","🛏️"],["Medicines","💊"]]},
+{s:"Railway Station",p:32,w:[["Luggage","🧳"],["Train","🚆"],["Porter","🧑‍🔧"],["Passenger","🧍"]]},
+{s:"Departmental Store",p:32,w:[["Cashier","💁"],["Customers","🛍️"],["Trolley","🛒"]]},
+{s:"Bus Stop",p:32,w:[["Bus stand","🚏"],["Driver","🧑‍✈️"],["Passenger","🧍"],["Bus","🚌"]]},
+{s:"Bank",p:32,w:[["Clerk","🧑‍💼"],["Counter","🏦"],["Customer","🧍"]]}
+];
+var sel="All",quizMode=false,$=function(i){return document.getElementById(i)};
+function speak(t){try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang="en-IN";speechSynthesis.speak(u)}catch(e){}}
+function chips(){var c=$("chips"),names=["All"].concat(DATA.map(function(d){return d.s}));
+c.innerHTML="";names.forEach(function(n){var b=document.createElement("button");b.className="chip";b.textContent=n;
+b.setAttribute("aria-pressed",n===sel);b.onclick=function(){sel=n;chips();render()};c.appendChild(b)})}
+function render(){
+var q=$("q").value.trim().toLowerCase(),list=$("list"),total=0,uniq={};list.innerHTML="";
+DATA.forEach(function(d){if(sel!=="All"&&sel!==d.s)return;
+var ws=d.w.filter(function(x){return !q||x[0].toLowerCase().indexOf(q)>-1});if(!ws.length)return;
+var h=document.createElement("h2");h.innerHTML=d.s+"<small>page "+d.p+"</small>";list.appendChild(h);
+var g=document.createElement("div");g.className="grid";
+ws.forEach(function(x){total++;uniq[x[0].toLowerCase()]=1;var b=document.createElement("button");b.className="w";
+b.innerHTML='<span class="e">'+x[1]+'</span><span class="t">'+x[0]+'</span>';b.onclick=function(){speak(x[0])};g.appendChild(b)});
+list.appendChild(g)});
+$("count").textContent=total+" labels shown · "+Object.keys(uniq).length+" different words";
+if(!total)list.innerHTML="<p>No word found. Try another spelling.</p>"}
+function newQ(){
+var pool=[];DATA.forEach(function(d){if(sel==="All"||sel===d.s)d.w.forEach(function(x){pool.push(x)})});
+var all=[];DATA.forEach(function(d){d.w.forEach(function(x){if(all.indexOf(x[0])<0)all.push(x[0])})});
+if(pool.length<1)return;var a=pool[Math.floor(Math.random()*pool.length)],o=[a[0]];
+while(o.length<4){var r=all[Math.floor(Math.random()*all.length)];if(o.indexOf(r)<0&&r!==a[0]&&r.toLowerCase()!==a[0].toLowerCase())o.push(r)}
+o.sort(function(){return Math.random()-.5});
+var z=$("quiz");z.innerHTML='<div class="quiz"><div class="big">'+a[1]+'</div><p>What is this called?</p><div class="opts" id="opts"></div><button class="btn" id="nx">Next</button></div>';
+o.forEach(function(t){var b=document.createElement("button");b.className="opt";b.textContent=t;
+b.onclick=function(){var ok=t.toLowerCase()===a[0].toLowerCase();b.classList.add(ok?"ok":"bad");if(ok)speak(a[0]);
+else Array.prototype.forEach.call($("opts").children,function(e){if(e.textContent.toLowerCase()===a[0].toLowerCase())e.classList.add("ok")})};$("opts").appendChild(b)});
+$("nx").onclick=newQ}
+$("modeBtn").onclick=function(){quizMode=!quizMode;this.textContent=quizMode?"Show words":"Quiz me";
+$("list").classList.toggle("hide",quizMode);$("count").classList.toggle("hide",quizMode);$("quiz").classList.toggle("hide",!quizMode);if(quizMode)newQ()};
+
+(function(){
+function icon(s){var c=document.createElement("canvas");c.width=c.height=s;var x=c.getContext("2d");
+x.fillStyle="#6b2d8f";x.fillRect(0,0,s,s);x.fillStyle="#fbf8f1";x.fillRect(s*.2,s*.2,s*.6,s*.6);
+x.fillStyle="#e8731f";x.fillRect(s*.2,s*.2,s*.6,s*.12);x.fillStyle="#6b2d8f";x.font="bold "+(s*.34)+"px sans-serif";
+x.textAlign="center";x.textBaseline="middle";x.fillText("Aa",s/2,s*.6);return c.toDataURL("image/png")}
+try{var a=icon(192),b=icon(512);$("fav").href=a;$("ati").href=a;
+var m={name:"Picture Words",short_name:"Picture Words",start_url:location.href.split("#")[0],scope:location.href.split("#")[0].replace(/[^\/]*$/,""),display:"standalone",background_color:"#fbf8f1",theme_color:"#6b2d8f",
+icons:[{src:a,sizes:"192x192",type:"image/png",purpose:"any"},{src:b,sizes:"512x512",type:"image/png",purpose:"any"}]};
+var l=document.createElement("link");l.rel="manifest";l.href="data:application/manifest+json,"+encodeURIComponent(JSON.stringify(m));document.head.appendChild(l)}catch(e){}
+})();
+$("q").oninput=render;chips();render();
+</script>
+</body>
+</html>
