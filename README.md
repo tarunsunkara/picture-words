@@ -1,2 +1,0 @@
-# picture-words
-picture quiz
